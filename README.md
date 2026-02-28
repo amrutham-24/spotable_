@@ -81,24 +81,22 @@ cp .env.example .env
 ```
 
 # 
-![screenshot1]
+![WhatsApp Image 2026-02-28 at 8 21 00 AM](https://github.com/user-attachments/assets/4ae02296-af66-45c2-ae10-56badc7543d6)
+![WhatsApp Image 2026-02-28 at 8 19 51 AM (1)](https://github.com/user-attachments/assets/1e1de65b-9576-4d61-a745-93e8c0213adc)
+![WhatsApp Image 2026-02-28 at 8 19 51 AM](https://github.com/user-attachments/assets/ab85f74d-5b0a-4c77-a79e-06332339794e)
 
-![screenshot2] here with proper name)
-*Add caption explaining what this shows*
 
-![Screenshot3] (Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
 
 #### Diagrams
 
 **System Architecture:**
+![WhatsApp Image 2026-02-28 at 8 17 56 AM](https://github.com/user-attachments/assets/9daad153-c835-49a0-890f-c6902b8fd78f)
 
-![Architecture Diagram](docs/architecture.png)
 
 
 **Application Workflow:**
+![WhatsApp Image 2026-02-28 at 8 38 30 AM](https://github.com/user-attachments/assets/d63fb6c7-c571-474d-946e-69e5058ecda8)
 
-![Workflow](docs/workflow.png)
 
 ---
 
