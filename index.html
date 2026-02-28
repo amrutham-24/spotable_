@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Top Location Bar -->
+        <div class="location-bar" id="location-bar">
+            <div class="location-icon">📍</div>
+            <div class="location-info">
+                <span class="location-label">Current Location</span>
+                <span class="location-text" id="current-location-text">Detecting...</span>
+            </div>
+            <button class="fetch-location-btn" id="fetch-location-btn">Fetch My Location</button>
+        </div>
+
+        <!-- View Containers -->
+        <main id="main-content">
+            <!-- Home / Map View -->
+            <section id="map-view" class="view active">
+                <header class="view-header">
+                    <div class="header-top">
+                        <div class="logo">Spot<span>Able</span></div>
+                        <button class="profile-toggle" id="profile-toggle">
+                            <img src="https://ui-avatars.com/api/?name=amrutham__&background=1877F2&color=fff"
+                                alt="Profile" />
+                        </button>
+                    </div>
+                </header>
+                <div id="map"></div>
+                <!-- Category Filter Chips (Map Only) -->
+                <div class="filter-chips">
+                    <button class="chip active" data-category="all">All</button>
+                    <button class="chip" data-category="Electrician">Electrician</button>
+                    <button class="chip" data-category="Plumber">Plumber</button>
+                    <button class="chip" data-category="Cobbler">Cobbler</button>
+                    <button class="chip" data-category="Babysitter">Babysitter</button>
+                    <button class="chip" data-category="Street Food">Street Food</button>
+                    <button class="chip" data-category="Gardener">Gardener</button>
+                    <button class="chip" data-category="Cook">Cook</button>
+                    <button class="chip" data-category="Pet Sitter">Pet Sitter</button>
+                </div>
+            </section>
+
+            <!-- Discovery View -->
+            <section id="discovery-view" class="view">
+                <header class="discovery-header">
+                    <div class="discovery-title">
+                        <h2>Discover Services</h2>
+                        <p>Find the best professionals near you</p>
+                    </div>
+                    <div class="search-bar-container">
+                        <input type="text" id="discovery-search" placeholder="Search for any service..." />
+                        <button class="filter-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="21" x2="4" y2="14"></line>
+                                <line x1="4" y1="10" x2="4" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12" y2="3"></line>
+                                <line x1="20" y1="21" x2="20" y2="16"></line>
+                                <line x1="20" y1="12" x2="20" y2="3"></line>
+                                <line x1="2" y1="14" x2="6" y2="14"></line>
+                                <line x1="10" y1="8" x2="14" y2="8"></line>
+                                <line x1="18" y1="16" x2="22" y2="16"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="discovery-body">
+
+                    <!-- Category Scroll -->
+                    <div class="section-header">
+                        <h3>Categories</h3>
+                        <button class="view-all">View All</button>
+                    </div>
+                    <div class="categories-grid" id="discovery-categories">
+                        <!-- Categories injected here -->
+                    </div>
+
+                    <!-- Popular Services -->
+                    <div class="section-header">
+                        <h3>Popular Services</h3>
+                        <div class="sort-selector">
+                            <button id="sort-nearest" class="sort-chip active">Nearest</button>
+                            <button id="sort-toprated" class="sort-chip">Top Rated</button>
+                        </div>
+                    </div>
+                    <div class="worker-list" id="discovery-worker-list">
+                        <!-- Workers cards injected here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chat View -->
+            <section id="chat-view" class="view">
+                <header class="chat-header">
+                    <button class="back-btn-chat" id="close-chat">←</button>
+                    <h2 id="chat-with-name">Messages</h2>
+                </header>
+                <div class="messages-container" id="messages-container">
+                    <!-- Messages injected here -->
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Type a message..." />
+                    <button class="send-message-btn" id="send-msg-btn">➤</button>
+                </div>
+            </section>
+
+            <!-- My Requests View -->
+            <section id="requests-view" class="view">
+                <header class="chat-header">
+                    <button class="back-btn-chat" onclick="switchView('map-view')">←</button>
+                    <h2>My Requests</h2>
+                </header>
+                <div class="discovery-body">
+                    <div class="worker-list" id="requests-list">
+                        <div class="sheet-placeholder">
+                            <p>You haven't made any requests yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Saved Workers View -->
+            <section id="saved-view" class="view">
+                <header class="chat-header">
+                    <button class="back-btn-chat" onclick="switchView('map-view')">←</button>
+                    <h2>Saved Workers</h2>
+                </header>
+                <div class="discovery-body">
+                    <div class="worker-list" id="saved-worker-list">
+                        <div class="sheet-placeholder">
+                            <p>No workers saved yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section id="settings-view" class="view">
+                <header class="chat-header">
+                    <button class="back-btn-chat" onclick="switchView('map-view')">←</button>
+                    <h2>Settings</h2>
+                </header>
+                <div class="discovery-body">
+                    <div class="pane-nav" style="padding:0">
+                        <div class="setting-item"
+                            style="padding: 15px; border-bottom: 1px solid var(--fb-border); display: flex; justify-content: space-between; align-items: center;">
+                            <span>Enable Notifications</span>
+                            <input type="checkbox" checked />
+                        </div>
+                        <div class="setting-item"
+                            style="padding: 15px; border-bottom: 1px solid var(--fb-border); display: flex; justify-content: space-between; align-items: center;">
+                            <span>Dark Mode</span>
+                            <input type="checkbox" />
+                        </div>
+                        <button class="nav-item logout" style="width:100%; margin-top: 20px;">Clear Data</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-view="map-view">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-view="discovery-view">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span>Discover</span>
+            </button>
+            <button class="nav-btn" data-view="chat-view">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                    </path>
+                </svg>
+                <span>Chat</span>
+            </button>
+            <button class="nav-btn" id="nav-profile-toggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Account</span>
+            </button>
+        </nav>
+
+        <!-- Bottom Sheet (Map Only) -->
+        <div id="bottom-sheet" class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-content" id="sheet-content">
+                <div class="sheet-placeholder">
+                    <p>Tap a worker on the map to see details</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar & Modals... -->
+        <!-- Registration/Profile/etc (remains as is) -->
+        <div class="right-pane" id="right-pane">
+            <div class="pane-header">
+                <h3>Profile</h3>
+                <button class="close-pane" id="close-pane">✕</button>
+            </div>
+            <div class="pane-content">
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=amrutham__&background=1877F2&color=fff&size=128"
+                        alt="Profile" class="profile-large" />
+                    <h2 class="username">amrutham__</h2>
+                    <p class="user-email">amrutham@example.com</p>
+                </div>
+                <nav class="pane-nav">
+                    <button class="nav-item" onclick="switchView('requests-view'); closeRightPane()">My
+                        Requests</button>
+                    <button class="nav-item" onclick="switchView('saved-view'); closeRightPane()">Saved Workers</button>
+                    <button class="nav-item" onclick="switchView('settings-view'); closeRightPane()">Settings</button>
+                    <button class="nav-item logout">Logout</button>
+                </nav>
+            </div>
+        </div>
+
+        <div class="left-pane-actions">
+            <button class="left-add-btn" id="open-add-worker">
+                <span>+</span> Add Worker
+            </button>
+        </div>
+
+        <div class="full-screen-modal" id="add-worker-modal">
+            <div class="modal-header">
+                <button class="back-btn" id="close-add-worker">✕</button>
+                <h2>Register New Worker</h2>
+                <div style="width: 24px;"></div>
+            </div>
+            <form class="add-worker-form" id="add-worker-form">
+                <div class="form-group image-upload-group">
+                    <label for="worker-image">Worker Image</label>
+                    <div class="image-preview-container" id="image-preview">
+                        <span>Click to upload image</span>
+                        <input type="file" id="worker-image" accept="image/*" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Worker Name / Title</label>
+                    <input type="text" id="worker-name" placeholder="E.g. Ramesh Plumbing Services" required />
+                </div>
+                <!-- ... other form fields ... -->
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="worker-category" required>
+                        <option value="">Select Category</option>
+                        <option value="Electrician">Electrician</option>
+                        <option value="Plumber">Plumber</option>
+                        <option value="Cobbler">Cobbler</option>
+                        <option value="Babysitter">Babysitter</option>
+                        <option value="Street Food">Street Food</option>
+                        <option value="Gardener">Gardener</option>
+                        <option value="Cook">Cook</option>
+                        <option value="Pet Sitter">Pet Sitter</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description (Optional)</label>
+                    <textarea id="worker-desc" rows="3" placeholder="Tell us more about the worker..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Contact Number (Optional)</label>
+                    <input type="tel" id="worker-phone" placeholder="Phone number" />
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <div class="location-capture">
+                        <input type="text" id="worker-coords" placeholder="Waiting for coordinates..." readonly />
+                        <button type="button" id="auto-capture-btn">Retry Capture</button>
+                    </div>
+                    <small>Auto-capturing your current GPS coordinates.</small>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn" id="submit-worker">Register Worker</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
