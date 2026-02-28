@@ -80,10 +80,13 @@ cp .env.example .env
 [Run commands - e.g., npm start, python app.py]
 ```
 
-#[screenshot2] here with proper name)
+# 
+![screenshot1]
+
+![screenshot2] here with proper name)
 *Add caption explaining what this shows*
 
-![Screenshot3](Add screenshot 3 here with proper name)
+![Screenshot3] (Add screenshot 3 here with proper name)
 *Add caption explaining what this shows*
 
 #### Diagrams
